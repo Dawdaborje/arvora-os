@@ -1,0 +1,47 @@
+# Ignore ISO build output
+out/
+work/
+work/**/*
+
+# Logs
+*.log
+*.log.*
+
+# Swap/backup/temp files
+*~
+*.swp
+*.swo
+*.bak
+*.tmp
+*.old
+
+# Editor folders
+.vscode/
+.idea/
+*.code-workspace
+
+# OS/metadata files
+.DS_Store
+Thumbs.db
+
+# Generated files from scripts
+*.iso
+*.img
+*.tar.*
+*.xz
+*.zst
+
+# Systemd machine ID
+airootfs/etc/machine-id
+
+# Compiled binaries/scripts (if any)
+*.o
+*.a
+*.so
+*.bin
+*.exe
+*.out
+
+# Optional: ignore personal notes or drafts
+notes.md
+TODO.md
