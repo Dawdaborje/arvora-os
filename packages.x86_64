@@ -137,7 +137,6 @@ iperf3
 jq
 lsof
 net-tools
-gnu-netcat
 openssl
 procps-ng
 strace
