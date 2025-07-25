@@ -1,0 +1,295 @@
+#!/usr/bin/env bash
+# Arvora OS Testing Framework
+# Comprehensive system testing and validation script
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Test results storage
+TEST_RESULTS=()
+TOTAL_TESTS=0
+PASSED_TESTS=0
+FAILED_TESTS=0
+
+# Logging function
+log() {
+    echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1"
+}
+
+# Test result function
+test_result() {
+    local test_name="$1"
+    local status="$2"
+    local message="$3"
+    
+    TOTAL_TESTS=$((TOTAL_TESTS + 1))
+    
+    if [[ "$status" == "PASS" ]]; then
+        echo -e "${GREEN}✓${NC} $test_name: $message"
+        PASSED_TESTS=$((PASSED_TESTS + 1))
+        TEST_RESULTS+=("PASS:$test_name:$message")
+    else
+        echo -e "${RED}✗${NC} $test_name: $message"
+        FAILED_TESTS=$((FAILED_TESTS + 1))
+        TEST_RESULTS+=("FAIL:$test_name:$message")
+    fi
+}
+
+# System information
+get_system_info() {
+    log "Gathering system information..."
+    echo "=== System Information ===" > /tmp/arvora_test_report.txt
+    echo "Date: $(date)" >> /tmp/arvora_test_report.txt
+    echo "Kernel: $(uname -r)" >> /tmp/arvora_test_report.txt
+    echo "Architecture: $(uname -m)" >> /tmp/arvora_test_report.txt
+    echo "Hostname: $(hostname)" >> /tmp/arvora_test_report.txt
+    echo "Uptime: $(uptime)" >> /tmp/arvora_test_report.txt
+    echo "" >> /tmp/arvora_test_report.txt
+}
+
+# Test CPU
+test_cpu() {
+    log "Testing CPU..."
+    
+    # Check CPU info
+    if [[ -f /proc/cpuinfo ]]; then
+        local cpu_cores=$(nproc)
+        local cpu_model=$(grep "model name" /proc/cpuinfo | head -1 | cut -d: -f2 | xargs)
+        test_result "CPU Detection" "PASS" "Found $cpu_cores cores - $cpu_model"
+    else
+        test_result "CPU Detection" "FAIL" "Cannot read CPU information"
+    fi
+    
+    # Test CPU performance
+    if command -v dd >/dev/null 2>&1; then
+        local start_time=$(date +%s.%N)
+        dd if=/dev/zero of=/dev/null bs=1M count=1000 2>/dev/null
+        local end_time=$(date +%s.%N)
+        local duration=$(echo "$end_time - $start_time" | bc -l 2>/dev/null || echo "0")
+        test_result "CPU Performance" "PASS" "Basic CPU test completed in ${duration}s"
+    else
+        test_result "CPU Performance" "FAIL" "dd command not available"
+    fi
+}
+
+# Test Memory
+test_memory() {
+    log "Testing memory..."
+    
+    # Check memory info
+    if [[ -f /proc/meminfo ]]; then
+        local total_mem=$(grep "MemTotal" /proc/meminfo | awk '{print $2}')
+        local total_mem_gb=$((total_mem / 1024 / 1024))
+        test_result "Memory Detection" "PASS" "Total RAM: ${total_mem_gb}GB"
+    else
+        test_result "Memory Detection" "FAIL" "Cannot read memory information"
+    fi
+    
+    # Test memory allocation
+    if command -v python3 >/dev/null 2>&1; then
+        python3 -c "
+import sys
+try:
+    # Try to allocate 100MB
+    data = bytearray(100 * 1024 * 1024)
+    print('Memory allocation test passed')
+except MemoryError:
+    print('Memory allocation test failed')
+    sys.exit(1)
+" 2>/dev/null && test_result "Memory Allocation" "PASS" "Successfully allocated test memory" || test_result "Memory Allocation" "FAIL" "Failed to allocate test memory"
+    else
+        test_result "Memory Allocation" "SKIP" "Python3 not available for memory test"
+    fi
+}
+
+# Test Storage
+test_storage() {
+    log "Testing storage..."
+    
+    # Check available disk space
+    local available_space=$(df / | tail -1 | awk '{print $4}')
+    local available_gb=$((available_space / 1024 / 1024))
+    test_result "Storage Space" "PASS" "Available: ${available_gb}GB"
+    
+    # Test disk I/O
+    if command -v dd >/dev/null 2>&1; then
+        local start_time=$(date +%s.%N)
+        dd if=/dev/zero of=/tmp/test_io bs=1M count=100 2>/dev/null
+        local end_time=$(date +%s.%N)
+        local duration=$(echo "$end_time - $start_time" | bc -l 2>/dev/null || echo "0")
+        rm -f /tmp/test_io
+        test_result "Disk I/O" "PASS" "Write test completed in ${duration}s"
+    else
+        test_result "Disk I/O" "FAIL" "dd command not available"
+    fi
+}
+
+# Test Network
+test_network() {
+    log "Testing network..."
+    
+    # Check network interfaces
+    if ip link show >/dev/null 2>&1; then
+        local interfaces=$(ip link show | grep -c "UP")
+        test_result "Network Interfaces" "PASS" "Found $interfaces active interfaces"
+    else
+        test_result "Network Interfaces" "FAIL" "Cannot check network interfaces"
+    fi
+    
+    # Test DNS resolution
+    if nslookup archlinux.org >/dev/null 2>&1; then
+        test_result "DNS Resolution" "PASS" "Successfully resolved archlinux.org"
+    else
+        test_result "DNS Resolution" "FAIL" "Failed to resolve archlinux.org"
+    fi
+    
+    # Test internet connectivity
+    if ping -c 1 8.8.8.8 >/dev/null 2>&1; then
+        test_result "Internet Connectivity" "PASS" "Successfully pinged 8.8.8.8"
+    else
+        test_result "Internet Connectivity" "FAIL" "Failed to ping 8.8.8.8"
+    fi
+}
+
+# Test Package Management
+test_package_management() {
+    log "Testing package management..."
+    
+    # Check pacman
+    if command -v pacman >/dev/null 2>&1; then
+        test_result "Pacman" "PASS" "Pacman is available"
+        
+        # Test database sync
+        if pacman -Sy --noconfirm >/dev/null 2>&1; then
+            test_result "Package Database" "PASS" "Successfully synced package database"
+        else
+            test_result "Package Database" "FAIL" "Failed to sync package database"
+        fi
+    else
+        test_result "Pacman" "FAIL" "Pacman not found"
+    fi
+}
+
+# Test Boot Configuration
+test_boot() {
+    log "Testing boot configuration..."
+    
+    # Check if we're running from live media
+    if [[ -f /run/archiso/bootmnt/arch/boot/x86_64/vmlinuz-linux ]]; then
+        test_result "Live Media" "PASS" "Running from Arvora OS live media"
+    else
+        test_result "Live Media" "FAIL" "Not running from live media"
+    fi
+    
+    # Check bootloader
+    if [[ -d /boot/grub ]] || [[ -d /boot/loader ]]; then
+        test_result "Bootloader" "PASS" "Bootloader configuration found"
+    else
+        test_result "Bootloader" "FAIL" "No bootloader configuration found"
+    fi
+}
+
+# Test Services
+test_services() {
+    log "Testing system services..."
+    
+    # Check systemd
+    if systemctl is-system-running >/dev/null 2>&1; then
+        local system_status=$(systemctl is-system-running)
+        test_result "Systemd" "PASS" "System status: $system_status"
+    else
+        test_result "Systemd" "FAIL" "Systemd not available"
+    fi
+    
+    # Check essential services
+    local essential_services=("systemd-networkd" "systemd-resolved" "sshd")
+    for service in "${essential_services[@]}"; do
+        if systemctl is-active "$service" >/dev/null 2>&1; then
+            test_result "Service: $service" "PASS" "Service is active"
+        else
+            test_result "Service: $service" "FAIL" "Service is not active"
+        fi
+    done
+}
+
+# Test Hardware Detection
+test_hardware() {
+    log "Testing hardware detection..."
+    
+    # Check PCI devices
+    if command -v lspci >/dev/null 2>&1; then
+        local pci_devices=$(lspci | wc -l)
+        test_result "PCI Devices" "PASS" "Found $pci_devices PCI devices"
+    else
+        test_result "PCI Devices" "FAIL" "lspci not available"
+    fi
+    
+    # Check USB devices
+    if command -v lsusb >/dev/null 2>&1; then
+        local usb_devices=$(lsusb | wc -l)
+        test_result "USB Devices" "PASS" "Found $usb_devices USB devices"
+    else
+        test_result "USB Devices" "FAIL" "lsusb not available"
+    fi
+}
+
+# Generate report
+generate_report() {
+    log "Generating test report..."
+    
+    echo "=== Test Results ===" >> /tmp/arvora_test_report.txt
+    echo "Total Tests: $TOTAL_TESTS" >> /tmp/arvora_test_report.txt
+    echo "Passed: $PASSED_TESTS" >> /tmp/arvora_test_report.txt
+    echo "Failed: $FAILED_TESTS" >> /tmp/arvora_test_report.txt
+    echo "Success Rate: $((PASSED_TESTS * 100 / TOTAL_TESTS))%" >> /tmp/arvora_test_report.txt
+    echo "" >> /tmp/arvora_test_report.txt
+    
+    echo "=== Detailed Results ===" >> /tmp/arvora_test_report.txt
+    for result in "${TEST_RESULTS[@]}"; do
+        echo "$result" >> /tmp/arvora_test_report.txt
+    done
+    
+    echo "Report saved to: /tmp/arvora_test_report.txt"
+}
+
+# Main function
+main() {
+    echo "=== Arvora OS Testing Framework ==="
+    echo "Starting comprehensive system tests..."
+    echo ""
+    
+    get_system_info
+    test_cpu
+    test_memory
+    test_storage
+    test_network
+    test_package_management
+    test_boot
+    test_services
+    test_hardware
+    generate_report
+    
+    echo ""
+    echo "=== Test Summary ==="
+    echo "Total Tests: $TOTAL_TESTS"
+    echo "Passed: $PASSED_TESTS"
+    echo "Failed: $FAILED_TESTS"
+    echo "Success Rate: $((PASSED_TESTS * 100 / TOTAL_TESTS))%"
+    
+    if [[ $FAILED_TESTS -eq 0 ]]; then
+        echo -e "${GREEN}All tests passed!${NC}"
+        exit 0
+    else
+        echo -e "${RED}Some tests failed. Check the report for details.${NC}"
+        exit 1
+    fi
+}
+
+# Run main function
+main "$@" 

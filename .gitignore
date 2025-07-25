@@ -1,47 +1,51 @@
-# Ignore ISO build output
-out/
+# Build artifacts
 work/
-work/**/*
+output/
+*.iso
+*.md5
+*.sha256
 
-# Logs
+# Test reports and diagnostics
+/tmp/arvora_test_report.txt
+/tmp/arvora_diagnostics_*.txt
+
+# Temporary files
+*.tmp
+*.temp
 *.log
-*.log.*
-
-# Swap/backup/temp files
-*~
+*.bak
 *.swp
 *.swo
-*.bak
-*.tmp
-*.old
+*~
 
-# Editor folders
+# IDE files
 .vscode/
 .idea/
 *.code-workspace
 
-# OS/metadata files
+# OS files
 .DS_Store
 Thumbs.db
 
-# Generated files from scripts
-*.iso
-*.img
-*.tar.*
-*.xz
-*.zst
+# Package manager files
+*.pkg.tar.zst
+*.pkg.tar.xz
+*.pkg.tar.gz
 
-# Systemd machine ID
-airootfs/etc/machine-id
+# Virtual machine files
+*.vdi
+*.vmdk
+*.qcow2
+*.raw
 
-# Compiled binaries/scripts (if any)
-*.o
-*.a
-*.so
-*.bin
-*.exe
-*.out
+# QEMU files
+*.qcow2
+*.raw
 
-# Optional: ignore personal notes or drafts
-notes.md
-TODO.md
+# VirtualBox files
+*.vbox
+*.vbox-prev
+
+# Test artifacts
+test-iso/
+test-vm/

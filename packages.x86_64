@@ -1,3 +1,4 @@
+# Core System
 alsa-utils
 amd-ucode
 arch-install-scripts
@@ -126,3 +127,48 @@ xdg-utils
 xfsprogs
 xl2tpd
 zsh
+
+# Development and Testing Tools
+bash-completion
+git
+htop
+iotop
+iperf3
+jq
+lsof
+net-tools
+netcat
+openssl
+procps-ng
+strace
+sysstat
+tree
+unzip
+wget
+zip
+
+# Performance Monitoring
+atop
+dstat
+glances
+iftop
+nethogs
+nload
+nmon
+powertop
+slurm
+speedtest-cli
+
+# System Analysis
+bmon
+btop
+ctop
+fio
+iperf
+mtr
+nethogs
+nload
+nmon
+powertop
+slurm
+speedtest-cli
