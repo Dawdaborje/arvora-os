@@ -137,7 +137,7 @@ iperf3
 jq
 lsof
 net-tools
-netcat
+gnu-netcat
 openssl
 procps-ng
 strace
@@ -149,14 +149,12 @@ zip
 
 # Performance Monitoring
 atop
-dstat
 glances
 iftop
 nethogs
 nload
 nmon
 powertop
-slurm
 speedtest-cli
 
 # System Analysis
@@ -166,9 +164,3 @@ ctop
 fio
 iperf
 mtr
-nethogs
-nload
-nmon
-powertop
-slurm
-speedtest-cli
