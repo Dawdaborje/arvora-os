@@ -163,6 +163,9 @@ ctop
 fio
 iperf
 mtr
+
+# AUR Helper and Calamares
+yay
 calamares
 qt6-base
 qt6-svg
@@ -174,10 +177,10 @@ kio
 solid
 polkit-qt6
 yaml-cpp
-ckbcomp
 gtk-update-icon-cache
 hwinfo
 icu
 kpmcore
 libpwquality
+ckbcomp
 mkinitcpio-openswap

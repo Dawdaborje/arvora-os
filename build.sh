@@ -16,9 +16,14 @@ NC='\033[0m' # No Color
 # Configuration
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="${SCRIPT_DIR}/work"
-OUTPUT_DIR="${SCRIPT_DIR}/output"
+OUTPUT_DIR="${OUTPUT_DIR:-${SCRIPT_DIR}/output}"
 PROFILE_NAME="arvora-os"
 ARCHISO_DIR="/usr/share/archiso/configs/releng"
+
+# Debug output for OUTPUT_DIR
+if [[ -n "${OUTPUT_DIR:-}" ]]; then
+    echo -e "${BLUE}[DEBUG]${NC} Using custom OUTPUT_DIR: $OUTPUT_DIR"
+fi
 
 # Logging function
 log() {
@@ -133,6 +138,7 @@ prepare_build() {
 # Build the ISO
 build_iso() {
     log "Starting ISO build process..."
+    log "Output directory: $OUTPUT_DIR"
     
     cd "$BUILD_DIR"
     

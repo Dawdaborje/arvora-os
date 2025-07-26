@@ -1,6 +1,7 @@
 # Build artifacts
 work/
 output/
+out/
 *.iso
 *.md5
 *.sha256

@@ -33,6 +33,8 @@ cd arvora-os
 
 ### 3. Build the ISO
 
+#### Option A: Standard Build
+
 ```bash
 # Make the build script executable
 chmod +x build.sh
@@ -49,13 +51,35 @@ This will:
 - Generate checksums
 - Place the ISO in the `output/` directory
 
+#### Option B: Build with Calamares Installer (Recommended)
+
+```bash
+# Make the build script executable
+chmod +x build-with-calamares.sh
+
+# Build with Calamares integration and testing
+./build-with-calamares.sh -t
+```
+
+This will:
+
+- Set up Calamares installer integration
+- Clean previous builds
+- Build the ISO with Calamares installer
+- Run tests automatically
+- Generate checksums
+- Place the ISO in the `out/calamares/` directory
+
 ### 4. Test the ISO
 
 #### Option A: Test in QEMU (Recommended)
 
 ```bash
-# Test the ISO in QEMU
+# Test the standard ISO in QEMU
 qemu-system-x86_64 -enable-kvm -m 4G -smp 4 -boot d -cdrom output/arvora-os-*.iso
+
+# Or test the Calamares ISO in QEMU
+qemu-system-x86_64 -enable-kvm -m 4G -smp 4 -boot d -cdrom out/calamares/arvora-os-*.iso
 ```
 
 #### Option B: Test in VirtualBox
@@ -95,34 +119,62 @@ ls /tmp/arvora_diagnostics_*.txt
 
 ## 🔧 Build Options
 
-### Basic Build
+### Standard Build Options
+
+#### Basic Build
 
 ```bash
 ./build.sh
 ```
 
-### Clean Build (Recommended)
+#### Clean Build (Recommended)
 
 ```bash
 ./build.sh -c
 ```
 
-### Build with Testing
+#### Build with Testing
 
 ```bash
 ./build.sh -c -t
 ```
 
-### Verbose Build
+#### Verbose Build
 
 ```bash
 ./build.sh -c -t -v
 ```
 
-### Skip Dependency Check
+#### Skip Dependency Check
 
 ```bash
 ./build.sh --skip-deps
+```
+
+### Calamares Build Options
+
+#### Build with Calamares (Recommended)
+
+```bash
+./build-with-calamares.sh
+```
+
+#### Build with Calamares and Testing
+
+```bash
+./build-with-calamares.sh -t
+```
+
+#### Build with Custom Output Directory
+
+```bash
+./build-with-calamares.sh -o /path/to/custom/output
+```
+
+#### Show Calamares Build Help
+
+```bash
+./build-with-calamares.sh -h
 ```
 
 ## 📊 Understanding Test Results

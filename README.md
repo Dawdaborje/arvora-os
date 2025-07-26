@@ -30,11 +30,17 @@ sudo pacman -S archiso squashfs-tools dosfstools libisoburn mtools cdrkit syslin
 git clone https://github.com/Dawdaborje/arvora-os.git
 cd arvora-os
 
-# Build with testing
+# Build with testing (standard build)
 ./build.sh -c -t
 
-# Test the ISO
+# Test the standard ISO
 qemu-system-x86_64 -enable-kvm -m 4G -smp 4 -boot d -cdrom output/arvora-os-*.iso
+
+# Or build with Calamares installer (recommended)
+./build-with-calamares.sh -t
+
+# Test the Calamares ISO
+qemu-system-x86_64 -enable-kvm -m 4G -smp 4 -boot d -cdrom out/calamares/arvora-os-*.iso
 ```
 
 For detailed instructions, see [QUICKSTART.md](QUICKSTART.md).
