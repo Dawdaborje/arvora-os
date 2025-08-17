@@ -50,3 +50,4 @@ Thumbs.db
 # Test artifacts
 test-iso/
 test-vm/
+test-results.json
