@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "arvora-file-manager",
+  "productName": "Arvora File Manager",
   "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "com.arvora.file-manager",
   "build": {
     "frontendDist": "../build",
     "devUrl": "http://localhost:5173",
@@ -12,9 +12,9 @@
   "app": {
     "windows": [
       {
-        "title": "arvora-file-manager",
-        "width": 800,
-        "height": 600,
+        "title": "Arvora File Manager",
+        "width": 1024,
+        "height": 768,
         "resizable": true,
         "fullscreen": false
       }
