@@ -50,7 +50,10 @@ less
 lftp
 libfido2
 libusb-compat
-linux
+linux-lts
+linux-lts-headers
+r8168-lts
+linux-lts-docs
 linux-atm
 linux-firmware
 linux-firmware-marvell
@@ -184,3 +187,7 @@ kpmcore
 libpwquality
 ckbcomp
 mkinitcpio-openswap
+
+
+# Software Development
+rustup

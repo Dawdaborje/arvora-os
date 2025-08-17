@@ -9,3 +9,6 @@ clean:
 	rm -rf work/
 	rm -rf output
 	rm -rf out/
+
+test:
+	./test_runner.sh
