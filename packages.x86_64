@@ -131,23 +131,7 @@ xfsprogs
 xl2tpd
 zsh
 
-# Development and Testing Tools
-bash-completion
-git
-htop
-iotop
-iperf3
-jq
-lsof
-net-tools
-openssl
-procps-ng
-strace
-sysstat
-tree
-unzip
-wget
-zip
+
 
 # Performance Monitoring
 atop
@@ -188,6 +172,26 @@ libpwquality
 ckbcomp
 mkinitcpio-openswap
 
-
-# Software Development
+# Development and Testing Tools
 rustup
+bash-completion
+git
+htop
+iotop
+iperf3
+jq
+lsof
+net-tools
+openssl
+procps-ng
+strace
+sysstat
+tree
+unzip
+wget
+zip
+visual-studio-code-bin
+zed
+brave-bin
+discord
+spotify-launcher
