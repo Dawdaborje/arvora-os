@@ -80,8 +80,8 @@ if [[ ! -f "profiledef.sh" ]]; then
 fi
 
 # Check if Calamares setup script exists
-if [[ ! -f "scripts/setup-calamares.sh" ]]; then
-    print_error "Calamares setup script not found. Please run setup-calamares.sh first."
+if [[ ! -f "scripts/setup_calamares.sh" ]]; then
+    print_error "Calamares setup script not found (scripts/setup_calamares.sh)."
     exit 1
 fi
 
@@ -98,7 +98,7 @@ print_success "Output directory created: $OUTPUT_DIR"
 
 # Step 1: Setup Calamares
 print_status "Step 1: Setting up Calamares integration..."
-./scripts/setup-calamares.sh
+./scripts/setup_calamares.sh
 
 # Step 2: Build Arvora OS with custom output directory
 print_status "Step 2: Building Arvora OS..."
@@ -111,19 +111,19 @@ else
 fi
 
 # Step 3: Check if build was successful
-if [[ -f "$OUTPUT_DIR/arvora-os-*.iso" ]]; then
+shopt -s nullglob
+_iso_glob=( "$OUTPUT_DIR"/arvora-os-*.iso )
+shopt -u nullglob
+if (( ${#_iso_glob[@]} > 0 )); then
     print_success "Arvora OS build completed successfully!"
     
-    # List the generated ISO files
     print_status "Generated ISO files:"
-    ls -la "$OUTPUT_DIR"/arvora-os-*.iso
+    ls -la "${_iso_glob[@]}"
     
     print_status "Next steps:"
-    print_status "1. Test the ISO with QEMU:"
-    print_status "   qemu-system-x86_64 -enable-kvm -m 4G -smp 4 -boot d -cdrom $OUTPUT_DIR/arvora-os-*.iso"
-    print_status "2. Calamares will start automatically on first boot"
-    print_status "3. Follow the installation wizard to install Arvora OS"
-    
+    print_status "1. Boot the ISO (Plasma + SDDM autologin as liveuser). Test with QEMU:"
+    print_status "   qemu-system-x86_64 -enable-kvm -m 6G -smp 4 -boot d -cdrom ${_iso_glob[0]}"
+    print_status "2. Calamares autostarts in the Plasma session (install Arvora OS to disk)."
 else
     print_error "Build failed! No ISO files found in $OUTPUT_DIR directory."
     exit 1

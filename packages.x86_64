@@ -2,7 +2,6 @@
 alsa-utils
 amd-ucode
 arch-install-scripts
-archinstall
 b43-fwcutter
 base
 bcachefs-tools
@@ -131,7 +130,24 @@ xfsprogs
 xl2tpd
 zsh
 
-
+# KDE Plasma live session (SDDM autologin; see customize_airootfs.sh)
+plasma-desktop
+plasma-wayland-session
+xorg-server
+sddm
+egl-wayland
+dolphin
+konsole
+networkmanager
+nm-connection-editor
+pipewire
+pipewire-pulse
+wireplumber
+alsa-utils
+xdg-desktop-portal-kde
+noto-fonts
+breeze-gtk
+kio-extras
 
 # Performance Monitoring
 atop
@@ -152,7 +168,9 @@ iperf
 mtr
 
 # AUR Helper and Calamares
+base-devel
 yay
+paru
 calamares
 qt6-base
 qt6-svg

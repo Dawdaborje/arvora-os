@@ -2,6 +2,8 @@
 
 This guide will help you get started with Arvora OS quickly, from building the ISO to running tests.
 
+For the full desktop experience (KDE Plasma live session + Calamares installer), use **`./build_with_calamares.sh`** from the repo root; output defaults to **`out/calamares/`**.
+
 ## 🚀 Quick Start
 
 ### Prerequisites

@@ -403,23 +403,13 @@ EOF
 # Services module
 cat > airootfs/etc/calamares/modules/services-systemd.conf << 'EOF'
 ---
-# Arvora OS Services Module Configuration
-# This file configures systemd services
-
-# Services to enable
 services:
   - "NetworkManager"
   - "systemd-resolved"
   - "systemd-timesyncd"
-  - "bluetooth"
-  - "cups"
-  - "avahi-daemon"
-  - "sshd"
+  - "sddm"
   - "fstrim.timer"
-  - "pkgfile-update.timer"
-  - "reflector.timer"
 
-# Services to disable
 disable:
   - "systemd-networkd"
   - "systemd-networkd-wait-online"

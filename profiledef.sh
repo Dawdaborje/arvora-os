@@ -35,4 +35,5 @@ file_permissions=(
   ["/usr/local/bin/livecd-sound"]="0:0:755"
   ["/usr/local/bin/arvora-test"]="0:0:755"
   ["/usr/local/bin/arvora-diagnostics"]="0:0:755"
+  ["/root/customize_airootfs.sh"]="0:0:755"
 )

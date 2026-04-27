@@ -112,25 +112,23 @@ prepare_build() {
     # Create output directory
     mkdir -p "$OUTPUT_DIR"
     
-    # Copy archiso profile
     if [[ ! -d "$BUILD_DIR" ]]; then
         cp -r "$ARCHISO_DIR" "$BUILD_DIR"
         log "Copied archiso profile to build directory"
     fi
     
-    # Copy our custom files
     cp "$SCRIPT_DIR/profiledef.sh" "$BUILD_DIR/"
     cp "$SCRIPT_DIR/packages.x86_64" "$BUILD_DIR/"
     cp "$SCRIPT_DIR/pacman.conf" "$BUILD_DIR/"
     
-    # Copy custom scripts to airootfs
-    mkdir -p "$BUILD_DIR/airootfs/usr/local/bin"
-    cp "$SCRIPT_DIR/airootfs/usr/local/bin/arvora-test" "$BUILD_DIR/airootfs/usr/local/bin/"
-    cp "$SCRIPT_DIR/airootfs/usr/local/bin/arvora-diagnostics" "$BUILD_DIR/airootfs/usr/local/bin/"
-    
-    # Make scripts executable
-    chmod +x "$BUILD_DIR/airootfs/usr/local/bin/arvora-test"
-    chmod +x "$BUILD_DIR/airootfs/usr/local/bin/arvora-diagnostics"
+    # Merge distro overlays onto releng (bootloader entries, syslinux, Calamares, Plasma, …)
+    rsync -a "$SCRIPT_DIR/airootfs/" "$BUILD_DIR/airootfs/"
+    if [[ -d "$SCRIPT_DIR/efiboot" ]]; then
+        rsync -a "$SCRIPT_DIR/efiboot/" "$BUILD_DIR/efiboot/"
+    fi
+    if [[ -d "$SCRIPT_DIR/syslinux" ]]; then
+        rsync -a "$SCRIPT_DIR/syslinux/" "$BUILD_DIR/syslinux/"
+    fi
     
     success "Build environment prepared"
 }
